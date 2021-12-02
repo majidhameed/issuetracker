@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<main role="main" th:fragment="main">
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+
+            <form th:action="@{/}" th:method="post">
+                <button class="btn btn-primary btn-lg" type="submit" th:name="assign" th:value="false">Regenerate
+                </button>
+                <button class="btn btn-success btn-lg" type="submit" th:name="assign" th:value="true">Regenerate and
+                    Assign
+                </button>
+            </form>
+
+            <th:block th:switch="${plan.isPresent()}">
+                <th:block th:case="true">
+                    <div class="container h5 text-secondary p-4">[[${plan.get().getSummary()}]]</div>
+
+                    <div th:each="week, iterStat: ${plan.get().getWeeks()}">
+                        <h4><span class="badge bg-info">Week: <span th:text="${iterStat.count}"></span></span></h4>
+                        <div class="row">
+                            <div class="col-md-4" th:each="story : ${week.getStories()}">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h3><span class="card-title badge bg-secondary "
+                                                  th:text="${story.title}"></h3>
+                                        <em class="card-text" th:text="${story.description}"></em>
+                                        <p class="card-title h6">Developer: <span
+                                                th:text="${story.developer?.name} ?: '---'"></span></p>
+                                        <h5 class="text-end"><span class="badge bg-warning text-dark">Estimated Point Value: <span
+                                                th:text="${story.estimatedPointValue}">0</span></span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+                <th:block th:case="*">
+                    <div class="col-md-4">
+                        <div class="alert alert-warning" role="alert">
+                            No plan possible, because no developers or stories with estimated status found.
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+</main>
+</body>
+</html>

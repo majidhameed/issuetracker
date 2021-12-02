@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="bugs">
+
+
+    <div class="row">
+        <div class="col-md-4" th:if="${bugs.isEmpty()}">
+            <div class="alert alert-warning" role="alert">
+                No bugs found.
+            </div>
+        </div>
+
+        <table th:if="${not bugs.isEmpty()}" class="table table-warning table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Status</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Description</th>
+                <th scope="col">Developer</th>
+                <th scope="col">Created On</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr  th:each="bug,iterStat : ${bugs}">
+                <th scope="row" th:text="${iterStat.count}"></th>
+                <td th:text="${bug.title}"></td>
+                <td th:text="${bug.status}"></td>
+                <td th:text="${bug.priority}"></td>
+                <td th:text="${bug.description}"></td>
+                <td th:text="${bug.developer?.name} ?: '---'"></td>
+                <td th:text="${bug.createdOn}"></td>
+                <td>
+                    <form th:action="@{/bugs/{id}(id = ${bug.id})}" th:method="get">
+                        <input type="submit" class="btn-sm btn-success" value="Edit"/>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/bugs/delete/{id}(id = ${bug.id})}" th:method="delete">
+                        <input type="submit" class="btn-sm btn-danger" value="Delete"/>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+</html>

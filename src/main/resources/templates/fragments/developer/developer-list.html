@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="developers">
+
+
+    <div class="row">
+        <div class="col-md-4" th:if="${developers.isEmpty()}">
+            <div class="alert alert-warning" role="alert">
+                No developers found.
+            </div>
+        </div>
+
+        <table th:if="${not developers.isEmpty()}" class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="developer,iterStat : ${developers}">
+                <th scope="row" th:text="${iterStat.count}"></th>
+                <td th:text="${developer.name}"></td>
+                <td>
+                    <form th:action="@{/developers/{id}(id = ${developer.id})}" th:method="get">
+                        <input type="submit" class="btn-sm btn-success" value="Edit"/>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/developers/delete/{id}(id = ${developer.id})}" th:method="post">
+                        <input type="submit" class="btn-sm btn-danger" value="Delete"/>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+</html>
