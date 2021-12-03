@@ -6,7 +6,7 @@
 ### Assumptions taken as per understanding of the specs.
 
 >- Only the stories with STATUS=ESTIMATED are included in the plan regardless of their estimated point value.
->- Each week the stories included will be less than equal to the Number of developers in the systems mutliplied by a factor of average developer capacity which is 10 but it conifgurable via application.properties and Story.estimatedValue in the entity.
+>- Each week the stories included will be less than equal to the Number of developers in the systems mutliplied by a factor of average developer capacity which is 10, but it is configurable via application.properties and Story.estimatedValue in the entities.
 
 ----
 ### Tested Environment / Requirements
@@ -62,7 +62,9 @@ OR
 - ### Application is bunlded with sample data for HSQLDB and MySQL
 - ### To start the application with no data run in *nodata* profile mode i.e.
 ###`mvn clean spring-boot:run -Dspring-boot.run.profiles=nodata`
+
 OR
+
 `set spring_profiles_active=nodata`
 #### Run through jar
 `java -jar target\issuetracker-1.0.jar`
@@ -172,15 +174,15 @@ curl -verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/p
 curl -verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/plans/true' | jq
 
 ---
-### What's there
+### What's there?
 - Planning Algorithm time complexity is LINEAR O(n); it is optimal and fair for unassigned stories.
 - Rest based CRUD services. 
 - Web User Interface for CRUD operations.
-- Planning services for getting the plan as well as getting and auto assignment for stories. 
+- Planning services for getting the plan as well as getting and auto assigning stories. 
 
 ---
-### What's missing / TODO List
-- Although the planning algorithm picks/assigns a developer optimally as well as fairly in case of unassigned stories, it could not be fair in few/rare cases.
+### What's missing? / TODO List
+- Although, the planning algorithm picks/assigns a developer optimally as well as fairly in case of unassigned stories, it could not be fair in few/rare cases of assigned stories.
 - Rest requests for bulk operations.
 - Indexes to speed up querying of data.
 - Integration and Unit tests.

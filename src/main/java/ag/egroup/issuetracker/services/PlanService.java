@@ -6,8 +6,7 @@ import ag.egroup.issuetracker.ds.Plan;
 import ag.egroup.issuetracker.ds.Week;
 import ag.egroup.issuetracker.entities.Developer;
 import ag.egroup.issuetracker.entities.Story;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,7 @@ import java.util.Set;
 
 
 @Service
+@Slf4j
 public class PlanService {
 
     @Value("${app.developer.avg.capacity:10}")
@@ -29,8 +29,6 @@ public class PlanService {
 
     @Autowired
     private DeveloperDao developerDao;
-
-    private Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     /**
      * Creates a plan based on stories that are of STATUS.ESTIMATED
@@ -85,10 +83,10 @@ public class PlanService {
                 weeklyCapacity = maxWeeklyCapacity;
             }
         }
-
-        if (weeklyCapacity == maxWeeklyCapacity && !week.getStories().isEmpty()) {
+        if (weeklyCapacity == maxWeeklyCapacity && !week.getStories().isEmpty()) { // in case else of above isn't executed
             plan.addWeek(week);
             week = new Week();
+            weeklyCapacity = maxWeeklyCapacity;
         }
 
         Developer developer;
@@ -115,7 +113,9 @@ public class PlanService {
                 weeklyCapacity = maxWeeklyCapacity;
             }
         }
-        plan.addWeek(week);
+        if (!week.getStories().isEmpty()) {
+            plan.addWeek(week);
+        }
 
         plan.setSummary(String
                 .format("Plan of %d week%s with %d developers working on %d stories of %d estimated point value.",
