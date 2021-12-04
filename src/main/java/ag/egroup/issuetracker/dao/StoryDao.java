@@ -10,9 +10,11 @@ import java.util.LinkedList;
 public interface StoryDao extends CrudRepository<Story, Integer> {
 
     LinkedList<Story> findAllByDeveloperIsNotNullAndStatusOrderByEstimatedPointValueDesc(Story.STATUS status);
+
     LinkedList<Story> findAllByDeveloperIsNullAndStatusOrderByEstimatedPointValueDesc(Story.STATUS status);
 
-    Iterable<Story> findAllByOrderByIdDesc();
+    LinkedList<Story> findAllByStatusOrderByEstimatedPointValueDesc(Story.STATUS status);
 
+    Iterable<Story> findAllByOrderByIdDesc();
 
 }

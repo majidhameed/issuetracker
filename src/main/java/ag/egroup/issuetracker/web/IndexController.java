@@ -3,6 +3,7 @@ package ag.egroup.issuetracker.web;
 import ag.egroup.issuetracker.ds.Plan;
 import ag.egroup.issuetracker.services.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class IndexController {
 
     @Autowired
+    @Qualifier("OptimalPlanService")
     private PlanService planService;
 
     @GetMapping

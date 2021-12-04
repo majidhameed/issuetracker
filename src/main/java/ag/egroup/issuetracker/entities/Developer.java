@@ -28,6 +28,9 @@ public class Developer {
     @JsonIgnore
     private List<Issue> issues;
 
+    @Transient
+    private int capacity;
+
     @PreRemove
     private void preRemove() {
         issues.forEach( issue -> issue.setDeveloper(null));

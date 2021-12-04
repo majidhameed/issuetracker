@@ -2,25 +2,23 @@ package ag.egroup.issuetracker.ds;
 
 import ag.egroup.issuetracker.entities.Story;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 public class Week {
 
-    private List<Story> stories;
+    private Set<Story> stories;
 
     public Week() {
-        this.stories = new LinkedList<>();
+        this.stories = new TreeSet<>(Comparator.comparingInt(Story::getId));
     }
 
     public void addStory(Story story) {
         this.stories.add(story);
     }
 
-    public List<Story> getStories() {
-        return Collections.unmodifiableList(this.stories);
+    public Set<Story> getStories() {
+        return Collections.unmodifiableSet(this.stories);
     }
 
 }
