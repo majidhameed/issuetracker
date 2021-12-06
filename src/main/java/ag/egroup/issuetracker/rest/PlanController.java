@@ -28,7 +28,7 @@ public class PlanController {
     }
 
     @PutMapping(value={"", "/{assign}"})
-    public ResponseEntity<Plan> plan(@PathVariable(required = false) Optional<Boolean> assign) {
+    public ResponseEntity<Plan> plan(@PathVariable Optional<Boolean> assign) {
         Optional<Plan> plan = planService.plan(assign.orElse(false));
         if (plan.isPresent()) {
             return ResponseEntity.ok(plan.get());

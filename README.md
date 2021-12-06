@@ -60,7 +60,7 @@ OR
 ---
 >## SAMPLE DATA
 - ### Application is bunlded with sample data for HSQLDB and MySQL
-- ### To start the application with no data run in *nodata* profile mode i.e.
+- ### To start the application with no data, run in *nodata* profile mode i.e.
 ###`mvn clean spring-boot:run -Dspring-boot.run.profiles=nodata`
 
 OR
@@ -78,42 +78,42 @@ OR
 
 > ### DEVELOPERS
 #### CREATE
-curl --verbose --location --request POST 'http://192.168.43.124:8080/api/v1/rest/developers' --header 'Content-Type: application/json' --data-raw '{
+curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/developers' --header 'Content-Type: application/json' --data-raw '{
 "name":"Tom"
 }' | jq
 
 #### READ
-curl --verbose --location --request GET 'http://192.168.43.124:8080/api/v1/rest/developers/1' | jq
+curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/developers/1' | jq
 
 #### READ ALL 
-curl --verbose --location --request GET 'http://192.168.43.124:8080/api/v1/rest/developers' | jq
+curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/developers' | jq
 
 #### UPDATE
-curl --verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/developers/1' --header 'Content-Type: application/json' --data-raw '{
+curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/developers/1' --header 'Content-Type: application/json' --data-raw '{
 "name":"Zen"
 }' | jq
 
 #### DELETE
-curl --verbose --location --request DELETE 'http://192.168.43.124:8080/api/v1/rest/developers/1' | jq
+curl --verbose --location --request DELETE 'http://localhost:8080/api/v1/rest/developers/1' | jq
 
 ---
 
 > ### STORIES
 #### CREATE
-curl --verbose --location --request POST 'http://192.168.43.124:8080/api/v1/rest/stories' --header 'Content-Type: application/json' --data-raw '{
+curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/stories' --header 'Content-Type: application/json' --data-raw '{
 "title":"S200",
 "status": "NEW",
 "estimatedPointValue": 0
 }' | jq
 
 #### READ
-curl --verbose --location --request GET 'http://192.168.43.124:8080/api/v1/rest/stories/1' | jq
+curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/stories/1' | jq
 
 #### READ ALL
-curl --verbose --location --request GET 'http://192.168.43.124:8080/api/v1/rest/stories' | jq
+curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/stories' | jq
 
 #### UPDATE
-curl --verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/stories/35' --header 'Content-Type: application/json' --data-raw '{
+curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/stories/35' --header 'Content-Type: application/json' --data-raw '{
 "title": "S200",
 "description": "Story 200",
 "developer": {"id": 2},
@@ -122,13 +122,13 @@ curl --verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/
 }' | jq
 
 #### DELETE
-curl --verbose --location --request DELETE 'http://192.168.43.124:8080/api/v1/rest/stories/35' | jq
+curl --verbose --location --request DELETE 'http://localhost:8080/api/v1/rest/stories/35' | jq
 
 ---
 
 > ### BUGS
 #### CREATE
-curl --verbose --location --request POST 'http://192.168.43.124:8080/api/v1/rest/bugs' --header 'Content-Type: application/json' --data-raw '{
+curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/bugs' --header 'Content-Type: application/json' --data-raw '{
 "title":"B3",
 "description": "Bug 3",
 "status": "NEW",
@@ -136,13 +136,13 @@ curl --verbose --location --request POST 'http://192.168.43.124:8080/api/v1/rest
 }' | jq
 
 #### READ
-curl --verbose --location --request GET 'http://192.168.43.124:8080/api/v1/rest/bugs/31' | jq
+curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/bugs/31' | jq
 
 #### READ ALL
-curl --verbose --location --request GET 'http://192.168.43.124:8080/api/v1/rest/bugs' | jq
+curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/bugs' | jq
 
 #### UPDATE
-curl --verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/bugs/36' --header 'Content-Type: application/json' --data-raw '{
+curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/bugs/36' --header 'Content-Type: application/json' --data-raw '{
 "title":"B03",
 "description": "Bug 03",
 "status": "VERIFIED",
@@ -151,27 +151,27 @@ curl --verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/
 }' | jq
 
 #### DELETE
-curl --verbose --location --request DELETE 'http://192.168.43.124:8080/api/v1/rest/bugs/36' | jq
+curl --verbose --location --request DELETE 'http://localhost:8080/api/v1/rest/bugs/36' | jq
 
 
 ---
 
 > ### PLANS
 #### GET - Generates and returns the plan without doing any assigment to stories
-curl --verbose --location --request GET 'http://192.168.43.124:8080/api/v1/rest/plans' | jq
+curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/plans' | jq
 
 ### PUT - Generates and returns the plan also does the assignment based on the path value(false/true) false is default
 > PUT - Without stories assignment
 
-curl --verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/plans' | jq
+curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans' | jq
 
 > PUT - Without stories assignment
 
-curl -verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/plans/false' | jq
+curl -verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans/false' | jq
 
 > ####PUT - With stories assignment
 
-curl -verbose --location --request PUT 'http://192.168.43.124:8080/api/v1/rest/plans/true' | jq
+curl -verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans/true' | jq
 
 ---
 ### What's there?
