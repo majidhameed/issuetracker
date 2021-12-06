@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("OptimalPlanService")
@@ -39,7 +40,7 @@ public class OptimalPlanService implements PlanService {
         Iterable<Developer> developers = developerDao.findAll();
 
         Map<Integer, Developer> developerMap = initDeveloperMap(developers);
-
+       
         if (stories.isEmpty() || developerMap.isEmpty()) { // base case
             log.info("No developers or stories exist in the system");
             return Optional.empty();
@@ -93,7 +94,6 @@ public class OptimalPlanService implements PlanService {
         if (developerMap.isEmpty()) {
             return Optional.empty();
         }
-
         return developerMap.keySet()
                 .stream()
                 .filter(id -> isInCapacity(story, developerMap.get(id).getCapacity()))
@@ -107,7 +107,7 @@ public class OptimalPlanService implements PlanService {
      * @param developer    - Developer is looked up from developerMap using id of this object
      * @param developerMap - if the developer's capacity reaches ero it is removed from the map.
      */
-    private void reduceDeveloperCapacity(Story story, Developer developer, Map<Integer, Developer> developerMap) {
+    private void reduceDeveloperCapacityMaybeRemoveDeveloper(Story story, Developer developer, Map<Integer, Developer> developerMap) {
         Developer actualDeveloper = developerMap.get(developer.getId());
         actualDeveloper.setCapacity(actualDeveloper.getCapacity() - story.getEstimatedPointValue());
         if (actualDeveloper.getCapacity() > 0) {
@@ -126,7 +126,7 @@ public class OptimalPlanService implements PlanService {
      * @return
      */
     private boolean canDeveloperHandleStory(Story story, Developer developer, Map<Integer, Developer> developerMap) {
-        if (!developerMap.containsKey(developer.getId())) {
+        if (developerMap.isEmpty() || !developerMap.containsKey(developer.getId())) {
             return false; // developer's capacity already reached and is removed from Map earlier.
         }
         return isInCapacity(story, developerMap.get(developer.getId()).getCapacity());
@@ -141,7 +141,7 @@ public class OptimalPlanService implements PlanService {
      * @param assign
      */
     private void processStory(Week week, Story story, Developer developer, Map<Integer, Developer> developerMap, boolean assign) {
-        reduceDeveloperCapacity(story, developer, developerMap);
+        reduceDeveloperCapacityMaybeRemoveDeveloper(story, developer, developerMap);
         assignDeveloperToStory(storyDao, story, developer, assign);
         week.addStory(story);
     }
@@ -153,22 +153,22 @@ public class OptimalPlanService implements PlanService {
      * @return
      */
     private String generateSummary(Plan plan) {
-        Set<Integer> developers = new HashSet<>();
+        Set<Integer> developerSet = new HashSet<>();
         int stories = 0;
         int pointValue = 0;
         for (Week week : plan.getWeeks()) {
             stories += week.getStories().size();
             for (Story story : week.getStories()) {
-                developers.add(story.getDeveloper() == null ? -1 : story.getDeveloper().getId());
+                developerSet.add(story.getDeveloper() == null ? -1 : story.getDeveloper().getId());
                 pointValue += story.getEstimatedPointValue();
             }
         }
-        developers.remove(-1); // in case of unassigned developer, need not to count
+        developerSet.remove(-1); // in case of unassigned developer, need not to count
 
         return String
                 .format("Plan of %d week%s with %d developers working on %d stories of %d estimated point value.",
                         plan.getWeeks().size(), plan.getWeeks().size() > 1 ? "s" : "",
-                        developers.size(), stories, pointValue);
+                        developerSet.size(), stories, pointValue);
     }
 
     /**
@@ -178,12 +178,11 @@ public class OptimalPlanService implements PlanService {
      * @return
      */
     private Map<Integer, Developer> initDeveloperMap(Iterable<Developer> developers) {
-        Map<Integer, Developer> map = new LinkedHashMap<>();
+        Map<Integer, Developer> developerMap = new LinkedHashMap<>();
         developers.forEach(developer -> {
             developer.setCapacity(developerAvgCapacity);
-            map.put(developer.getId(), developer);
+            developerMap.put(developer.getId(), developer);
         });
-        return map;
+        return developerMap;
     }
-
 }
