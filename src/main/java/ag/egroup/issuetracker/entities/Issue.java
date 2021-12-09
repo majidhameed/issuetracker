@@ -1,19 +1,25 @@
 package ag.egroup.issuetracker.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "issue_type")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
+@Table(indexes = {
+        @Index(name = "ix_issue_type", columnList = "issue_type"),
+        @Index(name = "ix_status", columnList = "status")
+})
 public class Issue {
 
     @Id
@@ -29,6 +35,20 @@ public class Issue {
     private LocalDate createdOn;
 
     @ManyToOne
+    @ToString.Exclude
+    @JoinColumn(name = "developer_id", foreignKey = @ForeignKey(name = "fk_developer_id"))
     private Developer developer;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Issue)) return false;
+        Issue issue = (Issue) o;
+        return getId() == issue.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

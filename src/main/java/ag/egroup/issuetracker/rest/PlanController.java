@@ -3,7 +3,6 @@ package ag.egroup.issuetracker.rest;
 import ag.egroup.issuetracker.ds.Plan;
 import ag.egroup.issuetracker.services.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,12 +12,10 @@ import java.util.Optional;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-
 @RequestMapping(value = "#{'${app.rest.api}'.concat('/plans')}")
 public class PlanController {
 
     @Autowired
-    @Qualifier("OptimalPlanService")
     private PlanService planService;
 
     @GetMapping

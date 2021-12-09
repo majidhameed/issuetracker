@@ -179,12 +179,12 @@ curl -verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans/
 - Rest based CRUD services. 
 - Web User Interface for CRUD operations.
 - Planning services for getting the plan as well as getting and auto assigning stories. 
+- Indexes to speed up querying of data.
 
 ---
 ### What's missing? / TODO List
 - Although, the planning algorithm picks/assigns a developer optimally as well as fairly in case of unassigned stories, it could not be fair in few/rare cases of assigned stories.
 - Rest requests for bulk operations.
-- Indexes to speed up querying of data.
 - Integration and Unit tests.
 
 ---

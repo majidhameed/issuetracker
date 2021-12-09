@@ -17,10 +17,19 @@
 
             <th:block th:switch="${plan.isPresent()}">
                 <th:block th:case="true">
-                    <div class="container h5 text-secondary p-4">[[${plan.get().getSummary()}]]</div>
-
+                    <div class="container h5 text-secondary p-4">
+                        <span class="text-muted" th:text="${plan.get().getSummary()}"></span>
+                    </div>
                     <div th:each="week, iterStat: ${plan.get().getWeeks()}">
-                        <h4><span class="badge bg-info">Week: <span th:text="${iterStat.count}"></span></span></h4>
+                        <h4>
+                            <span class="badge bg-info position-relative">
+                                Week: <span th:text="${iterStat.count}"/>
+                                <span class="position-absolute top-0 start-100 translate-middle p-1 badge rounded-pill bg-danger">
+                                <span th:text="${week.getWorkLoad()}"/>
+                                <span class="visually-hidden"></span>
+                            </span>
+                            </span>
+                        </h4>
                         <div class="row">
                             <div class="col-md-4" th:each="story : ${week.getStories()}">
                                 <div class="card mb-4">
@@ -36,10 +45,11 @@
                                 </div>
                             </div>
                         </div>
+                        <hr th:if="${iterStat.count}!=${plan.get().getWeeks().size()}" />
                     </div>
                 </th:block>
                 <th:block th:case="*">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="alert alert-warning" role="alert">
                             No plan possible, because no developers or stories with estimated status found.
                         </div>

@@ -15,13 +15,16 @@ import javax.validation.Valid;
 @RequestMapping(value="/" + BugsController.ctxController)
 public class BugsController {
 
-    @Autowired
-    private BugDao bugDao;
+    private final BugDao bugDao;
 
-    @Autowired
-    private DeveloperDao developerDao;
+    private final DeveloperDao developerDao;
 
     protected static final String ctxController = "bugs";
+
+    public BugsController(BugDao bugDao, DeveloperDao developerDao) {
+        this.bugDao = bugDao;
+        this.developerDao = developerDao;
+    }
 
     @PostMapping
     public String create(@ModelAttribute @Valid Bug bug, BindingResult bindingResult, Model model) {

@@ -10,7 +10,7 @@ CREATE TABLE issue (
     description varchar(255),
     title varchar(255),
     estimated_point_value int,
-    status varchar(255),
+    status varchar(255) NOT NULL,
     priority int,
     developer_id int
 );

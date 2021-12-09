@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -29,6 +30,8 @@ public class Developer {
     private List<Issue> issues;
 
     @Transient
+
+    @Value("${app.developer.avg.capacity:10}")
     private int capacity;
 
     @PreRemove

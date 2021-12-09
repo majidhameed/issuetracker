@@ -23,11 +23,15 @@ public class DefaultPlanService implements PlanService {
     @Value("${app.developer.avg.capacity:10}")
     private int developerAvgCapacity;
 
-    @Autowired
-    private StoryDao storyDao;
+    private final StoryDao storyDao;
+
+    private final DeveloperDao developerDao;
 
     @Autowired
-    private DeveloperDao developerDao;
+    public DefaultPlanService(StoryDao storyDao, DeveloperDao developerDao) {
+        this.storyDao = storyDao;
+        this.developerDao = developerDao;
+    }
 
     /**
      * Creates a plan based on stories that are of STATUS.ESTIMATED
@@ -124,6 +128,10 @@ public class DefaultPlanService implements PlanService {
 
         return Optional.of(plan);
 
+    }
+
+    private boolean isInCapacity(Story story, int capacity) {
+        return capacity >= story.getEstimatedPointValue();
     }
 
 
