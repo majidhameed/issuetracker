@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
-@RequestMapping(value="/" + DevelopersController.ctxController)
-public class DevelopersController {
+@Controller(value = DeveloperController.ctxController)
+@RequestMapping(value="/" + DeveloperController.ctxController)
+public class DeveloperController {
 
     @Autowired
     private DeveloperDao developerDao;

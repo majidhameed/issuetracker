@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
-@RequestMapping(value="/" + StoriesController.ctxController)
-public class StoriesController {
+@Controller(value = StoryController.ctxController)
+@RequestMapping(value="/" + StoryController.ctxController)
+public class StoryController {
 
     @Autowired
     private StoryDao storyDao;

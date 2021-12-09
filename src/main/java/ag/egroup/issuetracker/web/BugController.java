@@ -3,7 +3,6 @@ package ag.egroup.issuetracker.web;
 import ag.egroup.issuetracker.dao.DeveloperDao;
 import ag.egroup.issuetracker.dao.BugDao;
 import ag.egroup.issuetracker.entities.Bug;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
-@RequestMapping(value="/" + BugsController.ctxController)
-public class BugsController {
+@Controller(value = BugController.ctxController)
+@RequestMapping(value="/" + BugController.ctxController)
+public class BugController {
 
     private final BugDao bugDao;
 
@@ -21,7 +20,7 @@ public class BugsController {
 
     protected static final String ctxController = "bugs";
 
-    public BugsController(BugDao bugDao, DeveloperDao developerDao) {
+    public BugController(BugDao bugDao, DeveloperDao developerDao) {
         this.bugDao = bugDao;
         this.developerDao = developerDao;
     }

@@ -11,23 +11,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-@Controller
-public class IndexController {
+@Controller(value = PlanController.ctxController)
+public class PlanController {
 
     @Autowired
     private PlanService planService;
 
+    protected static final String ctxController = "plan";
+
     @GetMapping
     public String plan(Model model) {
         Optional<Plan> plan = planService.plan(false);
-        model.addAttribute("plan", plan);
-        return "index";
+        model.addAttribute(ctxController, plan);
+        return ctxController;
     }
 
     @PostMapping
     public String plan(@RequestParam Boolean assign, Model model) {
         Optional<Plan> plan = planService.plan(assign);
-        model.addAttribute("plan", plan);
-        return "index";
+        model.addAttribute(ctxController, plan);
+        return ctxController;
     }
 }
