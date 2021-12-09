@@ -8,10 +8,12 @@
         <h3>Create Developer</h3>
 
         <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Name"/>
-            <span class="alert-sm alert-danger" th:if="${#fields.hasErrors('name')}"
-                  th:errors="*{name}">Name Error</span>
+            <div class="row">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Name"/>
+                <span class="alert-sm alert-danger" th:if="${#fields.hasErrors('name')}"
+                      th:errors="*{name}">Name Error</span>
+            </div>
         </div>
 
         <input type="submit" class="btn btn-primary"/>

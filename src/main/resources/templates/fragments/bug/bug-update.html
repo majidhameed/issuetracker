@@ -46,8 +46,7 @@
                     <option value="0" selected="selected" th:text="${developer?.name} ?: '---'">
                     </option>
 
-                    <option th:each="developer : ${developers}"
-                            th:value="${developer.id}" th:text="${developer.name}">---
+                    <option th:each="developer : ${developers}" th:value="${developer.id}" th:text="${developer.name}">
                     </option>
                 </select>
                 <span class="alert-sm alert-danger" th:if="${#fields.hasErrors('developer')}"
