@@ -2,7 +2,9 @@ package ag.egroup.issuetracker.rest;
 
 import ag.egroup.issuetracker.dao.BugDao;
 import ag.egroup.issuetracker.entities.Bug;
-import ag.egroup.issuetracker.util.WebUtil;
+import ag.egroup.issuetracker.exception.BadRequestException;
+import ag.egroup.issuetracker.rest.component.Mapper;
+import com.github.fge.jsonpatch.JsonPatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static ag.egroup.issuetracker.rest.MediaType.APPLICATION_JSON_PATCH;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 
 @RestController
 @RequestMapping(value = "#{'${app.rest.api}'.concat('/')}" + BugController.ctxController)
@@ -28,6 +32,8 @@ public class BugController {
 
     protected static final String ctxController = "bugs";
 
+    @Autowired
+    private Mapper<Bug> mapper;
 
     @PostMapping
     public ResponseEntity<Bug> create(@RequestBody @Valid Bug bug, BindingResult bindingResult) {
@@ -37,8 +43,7 @@ public class BugController {
                     .created(URI.create(path + "/" + savedBug.getId()))
                     .body(savedBug);
         }
-        throw new ResponseStatusException(BAD_REQUEST,
-                String.format("Request has invalid data = [%s]", WebUtil.formatError.apply(bindingResult)));
+        throw new BadRequestException(bindingResult);
     }
 
     @GetMapping("/{id}")
@@ -62,7 +67,16 @@ public class BugController {
             }
             return ResponseEntity.notFound().build();
         }
-        throw new ResponseStatusException(BAD_REQUEST, WebUtil.formatError.apply(bindingResult));
+        throw new BadRequestException(bindingResult);
+    }
+
+    @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_PATCH)
+    public ResponseEntity<Bug> patch(@RequestBody JsonPatch patch, @PathVariable int id) {
+        Optional<Bug> optionalBug = bugDao.findById(id);
+        if (optionalBug.isPresent()) {
+            return ResponseEntity.ok(bugDao.save(mapper.patch(patch, optionalBug.get())));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

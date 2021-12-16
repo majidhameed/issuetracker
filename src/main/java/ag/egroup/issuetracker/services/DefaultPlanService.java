@@ -18,6 +18,7 @@ import java.util.Set;
 
 @Slf4j
 @Service("DefaultPlanService")
+@Deprecated(forRemoval = true)
 public class DefaultPlanService implements PlanService {
 
     @Value("${app.developer.avg.capacity:10}")

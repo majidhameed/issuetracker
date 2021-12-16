@@ -3,7 +3,6 @@ package ag.egroup.issuetracker.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -32,6 +31,10 @@ public class Issue {
     private String description;
 
     @Column(columnDefinition = "DATE DEFAULT CURRENT_DATE", updatable = false, insertable = false)
+/*
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+*/
     private LocalDate createdOn;
 
     @ManyToOne

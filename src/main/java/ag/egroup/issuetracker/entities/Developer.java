@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -30,7 +31,6 @@ public class Developer {
     private List<Issue> issues;
 
     @Transient
-
     @Value("${app.developer.avg.capacity:10}")
     private int capacity;
 

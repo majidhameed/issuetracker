@@ -2,7 +2,10 @@ package ag.egroup.issuetracker.rest;
 
 import ag.egroup.issuetracker.dao.StoryDao;
 import ag.egroup.issuetracker.entities.Story;
-import ag.egroup.issuetracker.util.WebUtil;
+import ag.egroup.issuetracker.exception.BadRequestException;
+import ag.egroup.issuetracker.rest.component.Mapper;
+
+import com.github.fge.jsonpatch.JsonPatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +15,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static ag.egroup.issuetracker.rest.MediaType.APPLICATION_JSON_PATCH;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 
@@ -23,6 +27,9 @@ public class StoryController {
 
     @Autowired
     private StoryDao storyDao;
+
+    @Autowired
+    private Mapper<Story> mapper;
 
     @Value("#{'${app.rest.api}'.concat('/')}" + StoryController.ctxController)
     private String path;
@@ -37,8 +44,7 @@ public class StoryController {
                     .created(URI.create(path + "/" + savedStory.getId()))
                     .body(savedStory);
         }
-        throw new ResponseStatusException(BAD_REQUEST,
-                String.format("Request has invalid data = [%s]", WebUtil.formatError.apply(bindingResult)));
+        throw new BadRequestException(bindingResult);
     }
 
     @GetMapping("/{id}")
@@ -62,7 +68,16 @@ public class StoryController {
             }
             return ResponseEntity.notFound().build();
         }
-        throw new ResponseStatusException(BAD_REQUEST, String.format("Request has invalid data = [%s]", WebUtil.formatError.apply(bindingResult)));
+        throw new BadRequestException(bindingResult);
+    }
+
+    @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_PATCH)
+    public ResponseEntity<Story> patch(@RequestBody JsonPatch patch, @PathVariable int id) {
+            Optional<Story> optionalStory = storyDao.findById(id);
+            if (optionalStory.isPresent()) {
+                return ResponseEntity.ok(storyDao.save(mapper.patch(patch, optionalStory.get())));
+            }
+            return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

@@ -2,7 +2,7 @@ package ag.egroup.issuetracker.rest;
 
 import ag.egroup.issuetracker.dao.DeveloperDao;
 import ag.egroup.issuetracker.entities.Developer;
-import ag.egroup.issuetracker.util.WebUtil;
+import ag.egroup.issuetracker.exception.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.net.URI;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 
 @RestController
 @RequestMapping(value = "#{'${app.rest.api}'.concat('/')}" + DeveloperController.ctxController)
@@ -38,8 +36,7 @@ public class DeveloperController {
                     .created(URI.create(path + "/" + savedDeveloper.getId()))
                     .body(savedDeveloper);
         }
-        throw new ResponseStatusException(BAD_REQUEST,
-                    String.format("Request has invalid data = [%s]", WebUtil.formatError.apply(bindingResult)));
+        throw new BadRequestException(bindingResult);
     }
 
     @GetMapping("/{id}")
@@ -63,7 +60,7 @@ public class DeveloperController {
             }
             return ResponseEntity.notFound().build();
         }
-        throw new ResponseStatusException(BAD_REQUEST, String.format("Request has invalid data = [%s]", WebUtil.formatError.apply(bindingResult)));
+        throw new BadRequestException(bindingResult);
     }
 
     @DeleteMapping("/{id}")

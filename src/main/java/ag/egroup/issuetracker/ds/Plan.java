@@ -25,6 +25,7 @@ public class Plan {
     public void addWeek(Week week) {
         this.weeks.add(week);
     }
+
     public List<Week> getWeeks() {
         return Collections.unmodifiableList(this.weeks);
     }
