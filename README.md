@@ -175,7 +175,8 @@ curl -verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans/
 
 ---
 ### What's there?
-- Planning Algorithm time complexity is LINEAR O(n); it is optimal and fair for unassigned stories.
+- Planning Algorithm worst case time complexity is Quadratic s*d;  where s is the no. of stories with estimated status and d is the no. of developers.
+- However, it performs better and is close to linear in most of the cases as we are reducing the number of developers and stories as we make assignments in each iteration. 
 - Rest based CRUD services. 
 - Web User Interface for CRUD operations.
 - Planning services for getting the plan as well as getting and auto assigning stories. 
