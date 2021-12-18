@@ -56,38 +56,11 @@ public class OptimalPlanService implements PlanService {
 
         Plan plan = new Plan();
         Week week = new Week();
-        Developer developer;
-        Story story;
+
         while (!stories.isEmpty()) { // until no estimated stories left
-            // Firstly, check assigned stories to be included this week, higher estimated point value
-            if (stories.peekFirst().getDeveloper() != null &&
-                    isAssignedDeveloperCanHandleStory(stories.peekFirst(), stories.peekFirst().getDeveloper(), developerMap)) {
-                story = stories.peekFirst();
-                processStory(stories, week, story, story.getDeveloper(), developerMap, false);
-                // check lower estimated point value - Assigned
-            } else if (stories.peekLast().getDeveloper() != null &&
-                    isAssignedDeveloperCanHandleStory(stories.peekLast(), stories.peekLast().getDeveloper(), developerMap)) {
-                story = stories.peekLast();
-                processStory(stories, week, story, story.getDeveloper(), developerMap, false);
-
-                // Secondly, unassigned stories, higher estimated point value
-            } else if (pickFirstDeveloperWhoCanHandleStory(stories.peekFirst(), developerMap).isPresent()) {
-                story = stories.peekFirst();
-                developer = pickFirstDeveloperWhoCanHandleStory(story, developerMap).get();
-                processStory(stories, week, story, developer, developerMap, assign);
-                // check lower estimated point value
-            } else if (pickFirstDeveloperWhoCanHandleStory(stories.peekLast(), developerMap).isPresent()) {
-                story = stories.peekLast();
-                developer = pickFirstDeveloperWhoCanHandleStory(story, developerMap).get();
-                processStory(stories, week, story, developer, developerMap, assign);
-
-                // Thirdly, Any assigned story that we can include this week
-            } else if (pickFirstAssignedStoryWithinCapacity(stories, developerMap).isPresent()) {
-                story = pickFirstAssignedStoryWithinCapacity(stories, developerMap).get();
-                processStory(stories, week, story, story.getDeveloper(), developerMap, false);
-
-                // Lastly, if all fails start a new week
-            } else {
+            if (!isAssignedStoryHandled(stories, developerMap, week) && // Picking assigned not possible
+                    !isUnAssignedStoryHandled(stories, developerMap, week, assign) &&
+                        !isStoryWithinCapacityAssigned(stories, developerMap, week)) {
                 plan.addWeek(week);
                 week = new Week();
                 developerMap = initDeveloperMap(developers);
@@ -101,6 +74,51 @@ public class OptimalPlanService implements PlanService {
         plan.setSummary(generateSummary(plan));
         return Optional.of(plan);
 
+    }
+
+    private boolean isStoryWithinCapacityAssigned(LinkedList<Story> stories, Map<Integer, Developer> developerMap, Week week) {
+        Story story;
+        if (pickFirstAssignedStoryWithinCapacity(stories, developerMap).isPresent()) {
+            story = pickFirstAssignedStoryWithinCapacity(stories, developerMap).get();
+            processStory(stories, week, story, story.getDeveloper(), developerMap, false);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isAssignedStoryHandled(LinkedList<Story> stories, Map<Integer, Developer> developerMap, Week week) {
+        boolean status = false;
+        Story story;
+        if (stories.peekFirst().getDeveloper() != null &&
+                cabAssignedDeveloperHandleStory(stories.peekFirst(), stories.peekFirst().getDeveloper(), developerMap)) {
+            story = stories.peekFirst();
+            processStory(stories, week, story, story.getDeveloper(), developerMap, false);
+            status = true;
+        } else if (stories.peekLast().getDeveloper() != null &&
+                cabAssignedDeveloperHandleStory(stories.peekLast(), stories.peekLast().getDeveloper(), developerMap)) {
+            story = stories.peekLast();
+            processStory(stories, week, story, story.getDeveloper(), developerMap, false);
+            status = true;
+        }
+        return status;
+    }
+
+    private boolean isUnAssignedStoryHandled(LinkedList<Story> stories, Map<Integer, Developer> developerMap, Week week, boolean assign) {
+        boolean status = false;
+        Story story;
+        Developer developer;
+        if (pickFirstDeveloperWhoCanHandleStory(stories.peekFirst(), developerMap).isPresent()) {
+            story = stories.peekFirst();
+            developer = pickFirstDeveloperWhoCanHandleStory(story, developerMap).get();
+            processStory(stories, week, story, developer, developerMap, assign);
+            status = true;
+        } else if (pickFirstDeveloperWhoCanHandleStory(stories.peekLast(), developerMap).isPresent()) {
+            story = stories.peekLast();
+            developer = pickFirstDeveloperWhoCanHandleStory(story, developerMap).get();
+            processStory(stories, week, story, developer, developerMap, assign);
+            status = true;
+        }
+        return status;
     }
 
     /**
@@ -132,16 +150,14 @@ public class OptimalPlanService implements PlanService {
      * @return
      */
     private Optional<Developer> pickFirstDeveloperWhoCanHandleStory(Story story, Map<Integer, Developer> developerMap) {
-
         if (developerMap.isEmpty() || story.getDeveloper() != null) {
             return Optional.empty();
         }
 
-
         return developerMap.values()
                 .stream()
                 .filter(developer -> isInCapacity(story, developer))
-                .findFirst();//.map(developerMap::get);
+                .findFirst();
     }
 
     /**
@@ -152,7 +168,7 @@ public class OptimalPlanService implements PlanService {
      * @param developerMap
      * @return
      */
-    private boolean isAssignedDeveloperCanHandleStory(Story story, Developer developer, Map<Integer, Developer> developerMap) {
+    private boolean cabAssignedDeveloperHandleStory(Story story, Developer developer, Map<Integer, Developer> developerMap) {
         if (developerMap.isEmpty() || !developerMap.containsKey(developer.getId())) {
             return false; // developer's capacity already reached and is removed from Map earlier.
         }
