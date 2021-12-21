@@ -55,8 +55,7 @@ public class DeveloperController {
         if (!bindingResult.hasErrors()) {
             if (developerDao.existsById(id)) {
                 developer.setId(id);
-                Developer savedDeveloper = developerDao.save(developer);
-                return ResponseEntity.ok(savedDeveloper);
+                return ResponseEntity.ok(developerDao.save(developer));
             }
             return ResponseEntity.notFound().build();
         }

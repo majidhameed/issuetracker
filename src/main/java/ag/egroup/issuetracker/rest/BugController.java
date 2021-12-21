@@ -62,8 +62,7 @@ public class BugController {
         if (!bindingResult.hasErrors()) {
             if (bugDao.existsById(id)) {
                 bug.setId(id);
-                Bug savedBug = bugDao.save(bug);
-                return ResponseEntity.ok(savedBug);
+                return ResponseEntity.ok(bugDao.save(bug));
             }
             return ResponseEntity.notFound().build();
         }

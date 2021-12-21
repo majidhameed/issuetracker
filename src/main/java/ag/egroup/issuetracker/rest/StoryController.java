@@ -63,8 +63,7 @@ public class StoryController {
         if (!bindingResult.hasErrors()) {
             if (storyDao.existsById(id)) {
                 story.setId(id);
-                Story savedStory = storyDao.save(story);
-                return ResponseEntity.ok(savedStory);
+                return ResponseEntity.ok(storyDao.save(story));
             }
             return ResponseEntity.notFound().build();
         }
