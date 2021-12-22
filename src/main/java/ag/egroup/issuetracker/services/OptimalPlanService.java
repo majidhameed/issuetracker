@@ -77,13 +77,12 @@ public class OptimalPlanService implements PlanService {
     }
 
     private boolean isStoryWithinCapacityAssigned(LinkedList<Story> stories, Map<Integer, Developer> developerMap, Week week) {
-        Story story;
-        if (pickFirstAssignedStoryWithinCapacity(stories, developerMap).isPresent()) {
-            story = pickFirstAssignedStoryWithinCapacity(stories, developerMap).get();
-            processStory(stories, week, story, story.getDeveloper(), developerMap, false);
-            return true;
+        Optional<Story> story  = pickFirstAssignedStoryWithinCapacity(stories, developerMap);
+        if (story.isEmpty()) {
+            return false;
         }
-        return false;
+        processStory(stories, week, story.get(), story.get().getDeveloper(), developerMap, false);
+        return true;
     }
 
     private boolean isAssignedStoryHandled(LinkedList<Story> stories, Map<Integer, Developer> developerMap, Week week) {
@@ -104,21 +103,17 @@ public class OptimalPlanService implements PlanService {
     }
 
     private boolean isUnAssignedStoryHandled(LinkedList<Story> stories, Map<Integer, Developer> developerMap, Week week, boolean assign) {
-        boolean status = false;
-        Story story;
-        Developer developer;
-        if (pickFirstDeveloperWhoCanHandleStory(stories.peekFirst(), developerMap).isPresent()) {
-            story = stories.peekFirst();
-            developer = pickFirstDeveloperWhoCanHandleStory(story, developerMap).get();
-            processStory(stories, week, story, developer, developerMap, assign);
-            status = true;
-        } else if (pickFirstDeveloperWhoCanHandleStory(stories.peekLast(), developerMap).isPresent()) {
+        Story story = stories.peekFirst();
+        Optional<Developer> developer = pickFirstDeveloperWhoCanHandleStory(story, developerMap);
+        if (developer.isEmpty()) {
             story = stories.peekLast();
-            developer = pickFirstDeveloperWhoCanHandleStory(story, developerMap).get();
-            processStory(stories, week, story, developer, developerMap, assign);
-            status = true;
+            developer = pickFirstDeveloperWhoCanHandleStory(story, developerMap);
         }
-        return status;
+        if (developer.isEmpty()) {
+            return false;
+        }
+        processStory(stories, week, story, developer.get(), developerMap, assign);
+        return true;
     }
 
     /**
