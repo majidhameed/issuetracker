@@ -17,8 +17,8 @@ OpenJDK 64-Bit Server VM 18.9 (build 11.0.2+9, mixed mode)
 
 #### MAVEN 3
 Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)
-Maven home: C:\IT_CodeRepo\Installed-Soft\maven3\bin\..
-Java version: 11.0.2, vendor: Oracle Corporation, runtime: C:\IT_CodeRepo\Installed-Soft\Java\jdk-11.0.2
+Maven home: C:\Installed-Soft\maven3\bin\..
+Java version: 11.0.2, vendor: Oracle Corporation, runtime: C:\Installed-Soft\Java\jdk-11.0.2
 Default locale: en_US, platform encoding: Cp1252
 OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
 
@@ -28,46 +28,71 @@ mysql  Ver 15.1 Distrib 10.4.21-MariaDB, for Win64 (AMD64), source revision 4902
 ---
 ## How to run?
 ### Change to where zip file is extracted
-`cd issuetracker`
+~~~
+cd issuetracker
+~~~
 
 ## RUN
-> ### `mvn clean spring-boot:run -Dspring-boot.run.profiles=mysql`
+
+~~~
+mvn clean spring-boot:run -Dspring-boot.run.profiles=mysql
+~~~
 
 OR
 
-> ### `mvn clean spring-boot:run -Dspring-boot.run.profiles=hsqldb`
+~~~
+mvn clean spring-boot:run -Dspring-boot.run.profiles=hsqldb
+~~~
 
 OR 
 
-> ### `mvn clean spring-boot:run -Dspring-boot.run.profiles=nodata`
+~~~
+mvn clean spring-boot:run -Dspring-boot.run.profiles=nodata
+~~~
 
 ### COMPILE
-`mvn clean compile`
+~~~
+mvn clean compile
+~~~
 
 ### PACKAGE
-`mvn clean package`
+~~~
+mvn clean package
+~~~
 
 ### Run directly from packaged jar
 #### Set Environment Variable for profile.
-`set spring_profiles_active=hsqldb`
+~~~
+set spring_profiles_active=hsqldb
+~~~
 
 OR
 
-`set spring_profiles_active=mysql`
+~~~
+set spring_profiles_active=mysql
+~~~
 #### Run through jar
-`java -jar target\issuetracker-1.0.jar`
+~~~
+java -jar target\issuetracker-1.0.jar
+~~~
 
 ---
 >## SAMPLE DATA
 - ### Application is bunlded with sample data for HSQLDB and MySQL
 - ### To start the application with no data, run in *nodata* profile mode i.e.
-###`mvn clean spring-boot:run -Dspring-boot.run.profiles=nodata`
+~~~
+mvn clean spring-boot:run -Dspring-boot.run.profiles=nodata
+~~~
 
 OR
 
-`set spring_profiles_active=nodata`
+~~~
+set spring_profiles_active=nodata
+~~~
 #### Run through jar
-`java -jar target\issuetracker-1.0.jar`
+~~~
+java -jar target\issuetracker-1.0.jar
+~~~
 
 ---
 >## WEB USER INTERFACE
@@ -78,101 +103,107 @@ OR
 
 > ### DEVELOPERS
 #### CREATE
-curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/developers' --header 'Content-Type: application/json' --data-raw '{
-"name":"Tom"
-}' | jq
+~~~
+curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/developers' 
+--header 'Content-Type: application/json' 
+--data-raw '{"name":"Tom"}' | jq
+~~~
 
 #### READ
+~~~
 curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/developers/1' | jq
-
+~~~
 #### READ ALL 
+~~~
 curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/developers' | jq
-
+~~~
 #### UPDATE
-curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/developers/1' --header 'Content-Type: application/json' --data-raw '{
-"name":"Zen"
-}' | jq
-
+~~~
+curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/developers/1' 
+--header 'Content-Type: application/json' 
+--data-raw '{"name":"Zen"}' | jq
+~~~
 #### DELETE
+~~~
 curl --verbose --location --request DELETE 'http://localhost:8080/api/v1/rest/developers/1' | jq
-
+~~~
 ---
 
 > ### STORIES
 #### CREATE
-curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/stories' --header 'Content-Type: application/json' --data-raw '{
-"title":"S200",
-"status": "NEW",
-"estimatedPointValue": 0
-}' | jq
-
+~~~
+curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/stories' 
+--header 'Content-Type: application/json' 
+--data-raw '{"title":"S200","status": "NEW","estimatedPointValue": 0}' | jq
+~~~
 #### READ
+~~~
 curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/stories/1' | jq
-
+~~~
 #### READ ALL
+~~~
 curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/stories' | jq
-
+~~~
 #### UPDATE
-curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/stories/35' --header 'Content-Type: application/json' --data-raw '{
-"title": "S200",
-"description": "Story 200",
-"developer": {"id": 2},
-"status": "ESTIMATED",
-"estimatedPointValue": 9
-}' | jq
+~~~
+curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/stories/35' 
+--header 'Content-Type: application/json' 
+--data-raw '{"title": "S200","description": "Story 200","developer": {"id": 2},"status": "ESTIMATED","estimatedPointValue": 9}' | jq
+~~~
 
 #### DELETE
+~~~
 curl --verbose --location --request DELETE 'http://localhost:8080/api/v1/rest/stories/35' | jq
-
+~~~
 ---
 
 > ### BUGS
 #### CREATE
-curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/bugs' --header 'Content-Type: application/json' --data-raw '{
-"title":"B3",
-"description": "Bug 3",
-"status": "NEW",
-"priority": "MINOR"
-}' | jq
+~~~
+curl --verbose --location --request POST 'http://localhost:8080/api/v1/rest/bugs' 
+--header 'Content-Type: application/json' 
+--data-raw '{"title":"B3","description": "Bug 3","status": "NEW","priority": "MINOR"}' | jq
+~~~
 
 #### READ
+~~~
 curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/bugs/31' | jq
-
+~~~
 #### READ ALL
+~~~
 curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/bugs' | jq
-
+~~~
 #### UPDATE
-curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/bugs/36' --header 'Content-Type: application/json' --data-raw '{
-"title":"B03",
-"description": "Bug 03",
-"status": "VERIFIED",
-"priority": "MAJOR",
-"developer": {"id": 2}
-}' | jq
-
+~~~
+curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/bugs/36' 
+--header 'Content-Type: application/json' 
+--data-raw '{"title":"B03","description": "Bug 03","status": "VERIFIED","priority": "MAJOR","developer": {"id": 2}}' | jq
+~~~
 #### DELETE
+~~~
 curl --verbose --location --request DELETE 'http://localhost:8080/api/v1/rest/bugs/36' | jq
-
+~~~
 
 ---
 
 > ### PLANS
 #### GET - Generates and returns the plan without doing any assigment to stories
+~~~
 curl --verbose --location --request GET 'http://localhost:8080/api/v1/rest/plans' | jq
-
+~~~
 ### PUT - Generates and returns the plan also does the assignment based on the path value(false/true) false is default
 > PUT - Without stories assignment
-
+~~~
 curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans' | jq
-
+~~~
 > PUT - Without stories assignment
-
+~~~
 curl -verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans/false' | jq
-
+~~~
 > ####PUT - With stories assignment
-
+~~~
 curl -verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans/true' | jq
-
+~~~
 ---
 ### What's there?
 - Planning Algorithm worst case time complexity is Quadratic s*d;  where s is the no. of stories with estimated status and d is the no. of developers.
