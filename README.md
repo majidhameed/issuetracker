@@ -1,6 +1,5 @@
+![](https://img.shields.io/github/license/majidhameed/issuetracker?style=plastic)
 # ISSUE TRACKER
-
-
 ---
 
 ### Assumptions taken as per understanding of the specs.
