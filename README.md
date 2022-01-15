@@ -199,7 +199,7 @@ curl --verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans
 ~~~
 curl -verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans/false' | jq
 ~~~
-> ####PUT - With stories assignment
+> PUT - With stories assignment
 ~~~
 curl -verbose --location --request PUT 'http://localhost:8080/api/v1/rest/plans/true' | jq
 ~~~
